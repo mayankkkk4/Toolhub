@@ -1,325 +1,89 @@
-# 🛠️ OpenTools
+# ToolHub - Free, Open-Source & Privacy-Friendly Web Tools
 
-**Open-source, free, and useful tools for everyone.**
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python Version](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/)
+[![Flask Framework](https://img.shields.io/badge/framework-Flask%203.0-green.svg)](https://flask.palletsprojects.com/)
+[![Vercel Deployment](https://img.shields.io/badge/deploy-Vercel-black.svg)](https://vercel.com)
 
-OpenTools is a community-focused web platform that brings together practical online tools in one place. The goal is to make useful developer, productivity, text, file, web, and utility tools easily accessible without unnecessary complexity.
-
-🌐 **Website:** (https://toolhub.runs-at.dev/)
-📦 **Status:** Active Development
-📜 **License:** MIT
-
----
-
-## ✨ Features
-
-* 🆓 Free to use
-* 🌐 Accessible from any modern browser
-* 🔓 Open-source
-* ⚡ Fast and lightweight
-* 📱 Responsive design
-* 🧩 Modular tool architecture
-* 🔐 Privacy-focused
-* 🚫 No unnecessary registration
-* 🤝 Community contributions welcome
+**ToolHub** is a free, privacy-first, open-source online platform providing powerful tools for developers, students, content creators, and everyday users.
 
 ---
 
-## 🧰 Available Tools
+## 🚀 Deploying to Vercel (Step-by-Step)
 
-OpenTools is designed to support multiple categories of useful tools.
+ToolHub is configured for zero-config serverless deployment on **Vercel** using `@vercel/python`.
 
-### 💻 Developer Tools
+### Method 1: Deploy via Vercel Dashboard (GitHub Integration)
 
-* JSON Formatter
-* JSON Validator
-* Base64 Encoder/Decoder
-* URL Encoder/Decoder
-* UUID Generator
-* Hash Generator
-* Timestamp Converter
-* Regex Tester
+1. **Push Code to GitHub:**
+   ```bash
+   git add .
+   git commit -m "Configure Vercel serverless deployment"
+   git push origin main
+   ```
 
-### 📝 Text Tools
+2. **Import Project to Vercel:**
+   - Go to [vercel.com/new](https://vercel.com/new).
+   - Select your GitHub repository (`toolhub`).
+   - Framework Preset: **Other**.
+   - Root Directory: `./`.
 
-* Word Counter
-* Character Counter
-* Case Converter
-* Text Cleaner
-* Duplicate Line Remover
+3. **Configure Environment Variables in Vercel:**
+   - `FLASK_ENV`: `production`
+   - `SECRET_KEY`: `[generate-random-32-byte-secret]`
+   - *(Optional)* `DATABASE_URL`: Your Supabase / Neon / Vercel Postgres URI.
 
-### 🔢 Utility Tools
-
-* Unit Converter
-* Percentage Calculator
-* Age Calculator
-* QR Code Generator
-* Random Generator
-
-### 🌐 Web Tools
-
-* URL Parser
-* HTTP Header Viewer
-* Meta Tag Generator
-* Color Converter
-
-> More tools will be added over time.
+4. **Click Deploy!**
+   Vercel will build the project and issue a live serverless URL (e.g. `https://toolhub.vercel.app`).
 
 ---
 
-## 🚀 Getting Started
-
-### 1. Clone the repository
+### Method 2: Deploy via Vercel CLI
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/opentools.git
+# Install Vercel CLI
+npm i -g vercel
+
+# Log in to Vercel
+vercel login
+
+# Deploy to Production
+vercel --prod
 ```
 
-### 2. Enter the project directory
+---
 
-```bash
-cd opentools
-```
+## 🌐 Connecting Custom Subdomain on Vercel (`toolhub.runs-at.dev` or `toolhub.MYDOMAIN.com`)
 
-### 3. Install dependencies
+1. Go to your **Vercel Project Dashboard** -> **Settings** -> **Domains**.
+2. Enter your custom subdomain: `toolhub.runs-at.dev` (or `toolhub.MYDOMAIN.com`) and click **Add**.
+3. Vercel will show the required DNS record:
+   - **Type:** `CNAME`
+   - **Name:** `toolhub`
+   - **Value:** `cname.vercel-dns.com`
+4. Log into your DNS provider (e.g. Cloudflare, Namecheap, GoDaddy, or `runs-at.dev` dashboard) and add the `CNAME` record.
+5. Vercel automatically verifies the domain and provisions a free SSL certificate within seconds.
 
-```bash
-npm install
-```
+---
 
-> If your project uses a different package manager or framework, follow the instructions provided in the project configuration.
-
-### 4. Start the development server
-
-```bash
-npm run dev
-```
-
-The application should now be available at:
+## 🏗️ Project Architecture for Vercel
 
 ```text
-http://localhost:3000
+ToolHub/
+├── vercel.json             # Vercel deployment routes & @vercel/python builder
+├── api/
+│   └── index.py            # Vercel Serverless Function entrypoint
+├── app.py                  # Main Flask application
+├── config.py               # Environment & Vercel /tmp database fallback
+├── tool_registry.py        # Centralized tool registry definitions
+├── requirements.txt        # Python package dependencies
+├── static/                 # Static assets (CSS, JS, PWA manifest, service-worker)
+├── templates/              # HTML workspace templates
+└── tests/                  # Pytest automated test suite
 ```
-
----
-
-## ⚙️ Environment Variables
-
-If the project requires environment variables, create a `.env` file:
-
-```env
-# Example
-API_KEY=your_api_key
-DATABASE_URL=your_database_url
-```
-
-**Never commit secrets or API keys to GitHub.**
-
-Add `.env` to `.gitignore`:
-
-```gitignore
-.env
-.env.local
-.env.*.local
-```
-
----
-
-## 🌍 Deployment
-
-OpenTools can be deployed using platforms such as:
-
-* Vercel
-* Netlify
-* Cloudflare
-* GitHub Pages
-* Other compatible hosting platforms
-
-The exact deployment method depends on the framework and backend used by the project.
-
-### Custom Subdomain
-
-You can connect OpenTools to a subdomain such as:
-
-```text
-tools.example.com
-```
-
-A typical DNS configuration may look like:
-
-```text
-Type: CNAME
-Name: tools
-Target: YOUR_HOSTING_PROVIDER
-```
-
-The exact DNS record depends on your hosting provider.
-
-After configuring DNS, enable HTTPS/SSL through your hosting provider.
-
----
-
-## 📁 Project Structure
-
-A typical structure may look like:
-
-```text
-opentools/
-│
-├── public/
-│   └── assets/
-│
-├── src/
-│   ├── components/
-│   ├── pages/
-│   ├── tools/
-│   └── utils/
-│
-├── .gitignore
-├── package.json
-├── README.md
-└── ...
-```
-
-The actual structure may differ depending on the technology used.
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome!
-
-### Steps
-
-1. Fork the repository.
-2. Create a new branch:
-
-```bash
-git checkout -b feature/new-tool
-```
-
-3. Add or improve a tool.
-4. Test your changes locally.
-5. Commit your changes:
-
-```bash
-git add .
-git commit -m "Add new tool"
-```
-
-6. Push your branch:
-
-```bash
-git push origin feature/new-tool
-```
-
-7. Open a Pull Request.
-
----
-
-## 💡 Adding a New Tool
-
-When adding a new tool:
-
-* Keep the interface simple.
-* Make it responsive.
-* Avoid unnecessary dependencies.
-* Protect user privacy.
-* Do not collect user data unless necessary.
-* Add appropriate error handling.
-* Include clear instructions for users.
-* Test the tool before submitting a Pull Request.
-
----
-
-## 🔐 Privacy
-
-OpenTools aims to keep user data private.
-
-Whenever possible:
-
-* Process data locally in the browser.
-* Avoid unnecessary data collection.
-* Never expose API keys.
-* Never store sensitive user input without a clear reason.
-* Clearly document any external services used by a tool.
-
----
-
-## 🛡️ Security
-
-If you discover a security vulnerability, please do not publicly disclose sensitive details immediately.
-
-Create a private security report or contact the project maintainer.
-
----
-
-## 🗺️ Roadmap
-
-Planned improvements include:
-
-* [ ] More developer tools
-* [ ] More productivity tools
-* [ ] File utilities
-* [ ] Image utilities
-* [ ] API utilities
-* [ ] Tool search
-* [ ] Tool categories
-* [ ] Favorites
-* [ ] Dark mode
-* [ ] PWA support
-* [ ] Community tool submissions
-* [ ] Plugin/tool API
-* [ ] Internationalization
-* [ ] Improved accessibility
-
----
-
-## 🌟 Why OpenTools?
-
-There are many individual websites providing online utilities. OpenTools aims to bring useful tools together into one simple, open-source platform.
-
-The project is designed around three principles:
-
-> **Simple. Open. Useful.**
 
 ---
 
 ## 📄 License
 
-This project is licensed under the **MIT License**.
-
-See the `LICENSE` file for more information.
-
----
-
-## ⭐ Support the Project
-
-If you find OpenTools useful:
-
-⭐ Star the repository
-🐛 Report bugs
-💡 Suggest new tools
-🤝 Contribute code
-📢 Share the project
-
-Every contribution helps improve OpenTools for everyone.
-
----
-
-## 👨‍💻 Author
-
-**YOUR NAME**
-
-GitHub: `https://github.com/YOUR_USERNAME`
-
----
-
-## 📌 Project Status
-
-🚧 **OpenTools is currently under active development.**
-
-New tools and improvements will be added regularly.
-
----
-
-**Made with ❤️ for the open-source community.**
+Licensed under the [MIT License](LICENSE).
