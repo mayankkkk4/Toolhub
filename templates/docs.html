@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}API Documentation - ToolHub Platform{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row">
+    <!-- Sidebar Navigation -->
+    <div class="col-lg-3 mb-4">
+      <div class="sticky-top" style="top: 90px;">
+        <div class="card border-0 shadow-sm radius-md">
+          <div class="card-body">
+            <h6 class="fw-bold text-uppercase text-muted small mb-3">API Reference</h6>
+            <div class="nav flex-column nav-pills gap-1">
+              <a class="nav-link active" href="#overview">Overview</a>
+              <a class="nav-link" href="#endpoint-tools">GET /api/tools</a>
+              <a class="nav-link" href="#endpoint-categories">GET /api/categories</a>
+              <a class="nav-link" href="#endpoint-ai">POST /api/ai/*</a>
+              <a class="nav-link" href="#rate-limiting">Rate Limiting & Safety</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="col-lg-9">
+      <div id="overview" class="mb-5">
+        <span class="badge bg-primary-subtle text-primary border rounded-pill px-3 py-1 mb-2 fw-semibold">Developer Hub</span>
+        <h1 class="fw-bold mb-3">ToolHub REST API</h1>
+        <p class="text-secondary lead">
+          ToolHub provides a simple, structured REST API to discover tools, categories, and execute backend AI services programmatically.
+        </p>
+      </div>
+
+      <!-- Endpoint: GET /api/tools -->
+      <div id="endpoint-tools" class="card border mb-4 radius-lg">
+        <div class="card-header bg-surface d-flex align-items-center gap-2 py-3">
+          <span class="badge bg-success font-monospace px-2 py-1">GET</span>
+          <span class="font-monospace fw-bold">/api/tools</span>
+        </div>
+        <div class="card-body">
+          <p class="text-secondary">Retrieve a JSON list of all available tools or search by keyword / filter by category.</p>
+          <h6 class="fw-bold">Query Parameters</h6>
+          <ul class="text-secondary small">
+            <li><code>search</code> (optional): Search query (e.g. <code>?search=json</code>)</li>
+            <li><code>category</code> (optional): Category ID (e.g. <code>?category=developer</code>)</li>
+          </ul>
+
+          <h6 class="fw-bold mt-3">Example Response</h6>
+          <pre class="bg-surface-subtle p-3 rounded font-monospace small"><code>{
+  "status": "success",
+  "count": 40,
+  "tools": [
+    {
+      "id": "json-formatter",
+      "name": "JSON Formatter & Minifier",
+      "category": "developer",
+      "description": "Format, beautify, minify, and validate JSON data",
+      "client_side": true
+    }
+  ]
+}</code></pre>
+        </div>
+      </div>
+
+      <!-- Endpoint: GET /api/categories -->
+      <div id="endpoint-categories" class="card border mb-4 radius-lg">
+        <div class="card-header bg-surface d-flex align-items-center gap-2 py-3">
+          <span class="badge bg-success font-monospace px-2 py-1">GET</span>
+          <span class="font-monospace fw-bold">/api/categories</span>
+        </div>
+        <div class="card-body">
+          <p class="text-secondary">Fetch all available tool categories.</p>
+        </div>
+      </div>
+
+      <!-- Endpoint: POST /api/ai/summarize -->
+      <div id="endpoint-ai" class="card border mb-4 radius-lg">
+        <div class="card-header bg-surface d-flex align-items-center gap-2 py-3">
+          <span class="badge bg-primary font-monospace px-2 py-1">POST</span>
+          <span class="font-monospace fw-bold">/api/ai/summarize</span>
+        </div>
+        <div class="card-body">
+          <p class="text-secondary">Summarize long text blocks using the extensible AI pipeline.</p>
+          <h6 class="fw-bold">Request Body (JSON)</h6>
+          <pre class="bg-surface-subtle p-3 rounded font-monospace small"><code>{
+  "text": "OpenTools is a free, privacy-friendly online tool suite..."
+}</code></pre>
+        </div>
+      </div>
+
+      <!-- Rate Limiting & Safety -->
+      <div id="rate-limiting" class="p-4 bg-surface-subtle border radius-md">
+        <h5 class="fw-bold mb-2"><i class="fa-solid fa-shield-halved text-primary me-2"></i>Rate Limiting & Input Limits</h5>
+        <p class="text-secondary small m-0">
+          The API enforces a standard limit of 100 requests per minute per IP address with a 16MB maximum payload ceiling.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block title %}{{ tool.name }} - Free Online {{ category.name }} | ToolHub{% endblock %}
+{% block meta_description %}{{ tool.description }} Free, fast, open-source online {{ tool.name }}. Data is processed locally in your browser.{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <!-- Breadcrumb Navigation -->
+  <nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb small">
+      <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
+      <li class="breadcrumb-item"><a href="{{ url_for('main.category_detail', category_id=category.id) }}">{{ category.name }}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{ tool.name }}</li>
+    </ol>
+  </nav>
+
+  <!-- Tool Header Card -->
+  <div class="tool-header-card">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+      <div class="d-flex align-items-center gap-3">
+        <div class="tool-card-icon m-0" style="width: 56px; height: 56px; font-size: 1.6rem;">
+          <i class="{{ tool.icon }}"></i>
+        </div>
+        <div>
+          <h1 class="fw-bold fs-3 mb-1">{{ tool.name }}</h1>
+          <p class="text-secondary m-0 fs-6">{{ tool.description }}</p>
+        </div>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        {% if tool.client_side %}
+          <span class="badge-client-side px-3 py-2 fs-6"><i class="fa-solid fa-shield-check me-1"></i> 100% Client-Side</span>
+        {% else %}
+          <span class="badge-server-side px-3 py-2 fs-6"><i class="fa-solid fa-sparkles me-1"></i> Extensible AI</span>
+        {% endif %}
+        <button class="btn btn-outline-warning rounded-pill btn-fav-toggle px-3" data-tool-id="{{ tool.id }}" title="Save to favorites">
+          <i class="fa-regular fa-star"></i> Favorite
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Privacy Notice Banner -->
+  <div class="privacy-banner">
+    <i class="fa-solid fa-user-shield privacy-banner-icon"></i>
+    <div>
+      <div class="fw-bold">Privacy Guarantee</div>
+      <div>{{ tool.privacy_note }}</div>
+    </div>
+  </div>
+
+  <!-- Main Tool Workspace -->
+  <div class="tool-workspace">
+    {% include "tools/_widgets.html" %}
+  </div>
+
+  <!-- Documentation / About / How it works Section -->
+  <div class="doc-card">
+    <h3 class="fw-bold mb-3"><i class="fa-solid fa-book-open text-primary me-2"></i>About {{ tool.name }}</h3>
+    <p class="text-secondary">
+      {{ tool.description }} ToolHub provides high-performance, developer-friendly web tools designed to make daily technical workflows seamless and secure.
+    </p>
+
+    <div class="row g-4 mt-2">
+      <div class="col-md-6">
+        <h5 class="fw-bold mb-2"><i class="fa-solid fa-gears me-2 text-primary"></i>How it works</h5>
+        <ul class="text-secondary small ps-3">
+          {% if tool.client_side %}
+            <li>All processing is computed locally in your web browser using HTML5, Web Crypto, and JavaScript engines.</li>
+            <li>No data, file contents, or personal information is uploaded to or stored on server infrastructure.</li>
+            <li>Runs offline once loaded thanks to Progressive Web App (PWA) service worker caching.</li>
+          {% else %}
+            <li>Requests are processed via our modular Flask backend API gateway.</li>
+            <li>Uses extensible provider interfaces with strict memory cleanup.</li>
+          {% endif %}
+        </ul>
+      </div>
+
+      <div class="col-md-6">
+        <h5 class="fw-bold mb-2"><i class="fa-solid fa-shield-cat me-2 text-primary"></i>Security & Privacy Information</h5>
+        <ul class="text-secondary small ps-3">
+          <li>Zero tracking or invasive analytics cookies.</li>
+          <li>Input fields do not persist sensitive credentials across browser restarts unless cached by local choice.</li>
+          <li>Licensed under the permissive MIT Open Source License.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Related Tools -->
+  {% if related_tools %}
+    <div class="mt-5">
+      <h4 class="fw-bold mb-3">Related {{ category.name }}</h4>
+      <div class="row g-3">
+        {% for rtool in related_tools %}
+          <div class="col-md-4">
+            <a href="{{ url_for('tools.tool_detail', tool_id=rtool.id) }}" class="tool-card text-decoration-none">
+              <div class="tool-card-icon"><i class="{{ rtool.icon }}"></i></div>
+              <div class="tool-card-title">{{ rtool.name }}</div>
+              <div class="tool-card-desc">{{ rtool.description }}</div>
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Include specific tool logic scripts -->
+<script src="{{ url_for('static', filename='js/tools/dev_tools.js') }}"></script>
+<script src="{{ url_for('static', filename='js/tools/text_tools.js') }}"></script>
+<script src="{{ url_for('static', filename='js/tools/calc_tools.js') }}"></script>
+<script src="{{ url_for('static', filename='js/tools/image_tools.js') }}"></script>
+<script src="{{ url_for('static', filename='js/tools/pdf_tools.js') }}"></script>
+<script src="{{ url_for('static', filename='js/tools/sec_tools.js') }}"></script>
+<script src="{{ url_for('static', filename='js/tools/ai_tools.js') }}"></script>
+
+<script>
+  // Track recently used tool
+  document.addEventListener('DOMContentLoaded', () => {
+    trackRecentTool('{{ tool.id }}');
+    
+    // Record usage count stat via API
+    fetch('/api/tools/stat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tool_id: '{{ tool.id }}' })
+    }).catch(err => {});
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}About Us - ToolHub Open Source Platform{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="max-width-800 mx-auto text-center mb-5">
+    <span class="badge bg-primary-subtle text-primary border rounded-pill px-3 py-2 mb-3 fw-semibold">Open Source & Privacy First</span>
+    <h1 class="fw-bold display-5 mb-3">About ToolHub</h1>
+    <p class="lead text-secondary">
+      ToolHub is a free, privacy-friendly online developer & creator workspace built for speed, transparency, and accessibility.
+    </p>
+  </div>
+
+  <div class="row g-4 mb-5">
+    <div class="col-md-4">
+      <div class="p-4 bg-surface border radius-lg h-100 text-center">
+        <div class="tool-card-icon mx-auto mb-3"><i class="fa-solid fa-lock text-success"></i></div>
+        <h4 class="fw-bold mb-2">Client-Side Privacy</h4>
+        <p class="text-secondary small m-0">Most tools process data strictly inside your browser memory using HTML5 APIs, canvas rendering, and Web Crypto. Your sensitive files and credentials are never uploaded.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="p-4 bg-surface border radius-lg h-100 text-center">
+        <div class="tool-card-icon mx-auto mb-3"><i class="fa-brands fa-github text-primary"></i></div>
+        <h4 class="fw-bold mb-2">100% Open Source</h4>
+        <p class="text-secondary small m-0">ToolHub is licensed under the permissive MIT License. Anyone can inspect code, contribute new tools, host local instances, or integrate our API.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="p-4 bg-surface border radius-lg h-100 text-center">
+        <div class="tool-card-icon mx-auto mb-3"><i class="fa-solid fa-bolt text-warning"></i></div>
+        <h4 class="fw-bold mb-2">Blazing Performance</h4>
+        <p class="text-secondary small m-0">Zero heavy frameworks or intrusive trackers. Lightweight, responsive, mobile-first design with Progressive Web App (PWA) offline capabilities.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="p-4 p-md-5 bg-surface-subtle border radius-xl mb-5">
+    <h3 class="fw-bold mb-3"><i class="fa-solid fa-layer-group text-primary me-2"></i>Technical Architecture</h3>
+    <p class="text-secondary">
+      ToolHub follows a clean, modular full-stack architecture separating UI components, centralized registry definitions, and REST endpoints:
+    </p>
+    <ul class="text-secondary">
+      <li><strong>Frontend:</strong> HTML5, CSS3 Custom Tokens, Vanilla JavaScript, Bootstrap 5, FontAwesome 6 icons.</li>
+      <li><strong>Backend:</strong> Python 3.12, Flask Framework with Blueprints (`main_bp`, `tools_bp`, `api_bp`, `auth_bp`).</li>
+      <li><strong>Database:</strong> SQLite with SQLAlchemy ORM (production ready for PostgreSQL migration).</li>
+      <li><strong>AI Pipeline:</strong> Extensible provider interface supporting local rule engine fallbacks and external API integrations.</li>
+    </ul>
+  </div>
+</div>
+{% endblock %}

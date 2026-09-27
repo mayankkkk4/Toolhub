@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Contribute & Feedback - ToolHub{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="text-center max-width-800 mx-auto mb-5">
+    <h1 class="fw-bold display-6 mb-2">Contribute & Suggest Tools</h1>
+    <p class="text-secondary lead">
+      ToolHub is built by and for the community. Suggest new tools, report bugs, or contribute code directly on GitHub.
+    </p>
+  </div>
+
+  {% if success %}
+    <div class="alert alert-success alert-dismissible fade show max-width-800 mx-auto mb-4 radius-md" role="alert">
+      <i class="fa-solid fa-circle-check me-2"></i><strong>Thank you!</strong> Your submission has been recorded. Our maintainers will review it shortly.
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  {% endif %}
+
+  <div class="row g-4 max-width-900 mx-auto">
+    <!-- Form Side -->
+    <div class="col-md-7">
+      <div class="card border radius-lg p-4 shadow-sm">
+        <h4 class="fw-bold mb-3"><i class="fa-solid fa-paper-plane text-primary me-2"></i>Submit Feedback or Idea</h4>
+        
+        <form action="{{ url_for('main.contribute') }}" method="POST">
+          <div class="mb-3">
+            <label class="form-label fw-bold">Feedback Type</label>
+            <select name="feedback_type" class="form-select">
+              <option value="suggestion">💡 Suggest a New Tool</option>
+              <option value="bug">🐛 Report a Bug</option>
+              <option value="feature">✨ Request Feature / Improvement</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-bold">Title</label>
+            <input type="text" name="title" class="form-control" placeholder="e.g. Add YAML to JSON converter tool" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-bold">Description & Details</label>
+            <textarea name="description" class="form-control" rows="5" placeholder="Explain what the tool should do, required features, or bug details..." required></textarea>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label fw-bold">Your Email (Optional)</label>
+            <input type="email" name="email" class="form-control" placeholder="name@example.com for status updates">
+          </div>
+
+          <button type="submit" class="btn btn-primary-custom w-100 py-2 font-weight-bold"><i class="fa-solid fa-paper-plane me-1"></i> Submit Proposal</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- GitHub Direct Links -->
+    <div class="col-md-5">
+      <div class="card border bg-surface-subtle radius-lg p-4 h-100">
+        <h4 class="fw-bold mb-3"><i class="fa-brands fa-github text-primary me-2"></i>GitHub Community</h4>
+        <p class="text-secondary small">
+          Prefer working directly with code? You can fork the repository, build client-side tool components, or open issues on GitHub.
+        </p>
+
+        <div class="d-grid gap-2 mt-4">
+          <a href="https://github.com" target="_blank" rel="noopener" class="btn btn-outline-dark text-start py-2">
+            <i class="fa-brands fa-github me-2"></i>Fork Repository on GitHub
+          </a>
+          <a href="https://github.com" target="_blank" rel="noopener" class="btn btn-outline-dark text-start py-2">
+            <i class="fa-solid fa-circle-dot me-2"></i>Open a GitHub Issue
+          </a>
+          <a href="{{ url_for('main.docs') }}" class="btn btn-outline-primary text-start py-2">
+            <i class="fa-solid fa-book me-2"></i>Read Tool Developer Guide
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

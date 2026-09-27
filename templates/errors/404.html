@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Page Not Found (404) - ToolHub{% endblock %}
+
+{% block content %}
+<div class="container py-5 text-center my-5">
+  <div class="display-1 fw-bold text-primary mb-3">404</div>
+  <h2 class="fw-bold mb-3">Tool or Page Not Found</h2>
+  <p class="text-secondary max-width-600 mx-auto mb-4">
+    The page or tool you are looking for might have been moved, renamed, or is currently undergoing maintenance.
+  </p>
+  <div class="d-flex justify-content-center gap-3">
+    <a href="{{ url_for('main.index') }}" class="btn btn-primary rounded-pill px-4">Back to Homepage</a>
+    <a href="{{ url_for('main.all_tools') }}" class="btn btn-outline-secondary rounded-pill px-4">Browse All Tools</a>
+  </div>
+</div>
+{% endblock %}

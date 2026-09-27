@@ -1,0 +1,241 @@
+/* ==========================================================================
+   Tool Widget Specific Stylesheet
+   ========================================================================== */
+
+.tool-header-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.tool-workspace {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  box-shadow: var(--shadow-md);
+  margin-bottom: 2.5rem;
+}
+
+.tool-label {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tool-textarea {
+  width: 100%;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  padding: 1rem;
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  resize: vertical;
+  min-height: 180px;
+  transition: var(--transition-fast);
+}
+
+.tool-textarea:focus {
+  outline: none;
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+.tool-action-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin: 1.25rem 0;
+  padding: 0.75rem 1rem;
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+}
+
+.btn-action {
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: var(--transition-fast);
+  cursor: pointer;
+  border: none;
+}
+
+.btn-primary-custom {
+  background: var(--brand-primary);
+  color: #ffffff;
+}
+
+.btn-primary-custom:hover {
+  background: var(--brand-primary-hover);
+  color: #ffffff;
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-secondary-custom {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+.btn-secondary-custom:hover {
+  background: var(--border-color);
+  color: var(--text-primary);
+}
+
+.privacy-banner {
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.25rem;
+  color: var(--text-primary);
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  font-size: 0.88rem;
+  margin-bottom: 1.5rem;
+}
+
+.privacy-banner-icon {
+  color: #10b981;
+  font-size: 1.3rem;
+  margin-top: 0.1rem;
+}
+
+/* Calculator Grid Styling */
+.calc-display {
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  text-align: right;
+  font-family: var(--font-mono);
+  margin-bottom: 1.25rem;
+}
+
+.calc-expression {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  min-height: 1.2rem;
+}
+
+.calc-result {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  word-break: break-all;
+}
+
+.calc-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+}
+
+.calc-btn {
+  padding: 1rem;
+  font-size: 1.15rem;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.calc-btn:hover {
+  background: var(--bg-surface-subtle);
+  border-color: var(--brand-primary);
+}
+
+.calc-btn-op {
+  background: var(--bg-surface-subtle);
+  color: var(--brand-primary);
+  font-weight: 700;
+}
+
+.calc-btn-equals {
+  background: var(--brand-primary);
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.calc-btn-equals:hover {
+  background: var(--brand-primary-hover);
+  color: #ffffff;
+}
+
+/* Diff Viewer Styling */
+.diff-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+}
+
+.diff-box {
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  white-space: pre-wrap;
+  word-break: break-all;
+  max-height: 350px;
+  overflow-y: auto;
+}
+
+.diff-add {
+  background-color: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+}
+
+.diff-del {
+  background-color: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
+/* Image Tool Controls */
+.image-preview-box {
+  border: 2px dashed var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 2rem;
+  text-align: center;
+  background: var(--bg-surface-subtle);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.image-preview-box:hover {
+  border-color: var(--brand-primary);
+}
+
+.image-preview-img {
+  max-width: 100%;
+  max-height: 320px;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Documentation Accordion */
+.doc-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  margin-top: 2rem;
+}

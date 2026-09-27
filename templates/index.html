@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block title %}ToolHub - Free, Open-Source & Privacy-Friendly Online Tools{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="container">
+    <div class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-3 py-2 mb-3 font-weight-bold">
+      <i class="fa-solid fa-sparkles me-1"></i> 100% Free & Open Source Platform
+    </div>
+    
+    <h1 class="hero-title">
+      Free Tools. Open Source.<br>
+      <span class="gradient-text">Built for Everyone.</span>
+    </h1>
+    
+    <p class="hero-subtitle">
+      Simple, fast and privacy-friendly online tools for developers, students, and creators — free for everyone. Most tools run 100% locally in your browser.
+    </p>
+
+    <!-- Global Instant Search Bar -->
+    <div id="search-section" class="search-container mb-4">
+      <div class="search-input-wrapper">
+        <i class="fa-solid fa-magnifying-glass search-input-icon"></i>
+        <input type="text" id="global-tool-search" class="search-input" placeholder="Search {{ total_tools_count }} free tools (e.g. json, password, pdf, image, base64)..." autocomplete="off">
+      </div>
+      <div id="search-dropdown-results" class="search-dropdown text-start"></div>
+    </div>
+
+    <!-- Quick Stats Badges -->
+    <div class="d-flex flex-wrap justify-content-center gap-3 text-muted small">
+      <div><i class="fa-solid fa-shield-halved text-success me-1"></i> Privacy-First</div>
+      <div><i class="fa-solid fa-bolt text-warning me-1"></i> Blazing Fast</div>
+      <div><i class="fa-brands fa-github text-primary me-1"></i> MIT Open Source</div>
+      <div><i class="fa-solid fa-wifi-slash text-info me-1"></i> Offline PWA Ready</div>
+    </div>
+  </div>
+</section>
+
+<!-- Categories Section -->
+<section class="py-5 bg-surface-subtle">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-end mb-4">
+      <div>
+        <h2 class="fw-bold mb-1">Browse Categories</h2>
+        <p class="text-secondary small m-0">Explore our curated collections of online tools.</p>
+      </div>
+      <a href="{{ url_for('main.all_tools') }}" class="btn btn-outline-primary btn-sm rounded-pill">View All Tools &rarr;</a>
+    </div>
+
+    <div class="row g-3">
+      {% for cat in categories %}
+        <div class="col-6 col-md-4 col-lg-3">
+          <a href="{{ url_for('main.category_detail', category_id=cat.id) }}" class="tool-card text-decoration-none h-100">
+            <div class="tool-card-icon">
+              <i class="{{ cat.icon }}"></i>
+            </div>
+            <div class="tool-card-title">{{ cat.name }}</div>
+            <div class="tool-card-desc">{{ cat.description }}</div>
+          </a>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Popular Tools Grid -->
+<section class="py-5">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-end mb-4">
+      <div>
+        <h2 class="fw-bold mb-1">Popular Tools</h2>
+        <p class="text-secondary small m-0">Most used tools by developers, students, and creators.</p>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      {% for tool in popular_tools %}
+        <div class="col-md-6 col-lg-4">
+          <div class="tool-card">
+            <div class="d-flex justify-content-between align-items-start">
+              <div class="tool-card-icon">
+                <i class="{{ tool.icon }}"></i>
+              </div>
+              <button class="btn btn-link p-0 text-muted btn-fav-toggle fs-5" data-tool-id="{{ tool.id }}" title="Bookmark tool">
+                <i class="fa-regular fa-star"></i>
+              </button>
+            </div>
+            <a href="{{ url_for('tools.tool_detail', tool_id=tool.id) }}" class="text-decoration-none">
+              <div class="tool-card-title">{{ tool.name }}</div>
+            </a>
+            <div class="tool-card-desc">{{ tool.description }}</div>
+            <div class="tool-card-footer">
+              {% if tool.client_side %}
+                <span class="badge-client-side"><i class="fa-solid fa-lock"></i> Client-Side</span>
+              {% else %}
+                <span class="badge-server-side"><i class="fa-solid fa-cloud"></i> Extensible API</span>
+              {% endif %}
+              <a href="{{ url_for('tools.tool_detail', tool_id=tool.id) }}" class="btn btn-sm btn-outline-primary rounded-pill px-3">Open Tool</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Recently Used Tools Section -->
+<section class="py-5 bg-surface-subtle">
+  <div class="container">
+    <div class="mb-4">
+      <h3 class="fw-bold mb-1"><i class="fa-solid fa-clock-rotate-left me-2 text-primary"></i>Recently Used Tools</h3>
+      <p class="text-secondary small m-0">Your recently accessed tools stored safely in your browser.</p>
+    </div>
+    <div id="recently-used-tools-container" class="row g-3">
+      <!-- Populated dynamically via JS -->
+    </div>
+  </div>
+</section>
+
+<!-- Open Source Contribution CTA Banner -->
+<section class="py-5">
+  <div class="container">
+    <div class="card border-0 bg-primary text-white p-4 p-md-5 radius-xl shadow-lg position-relative overflow-hidden">
+      <div class="row align-items-center position-relative z-1">
+        <div class="col-lg-8 mb-3 mb-lg-0">
+          <h2 class="fw-bold mb-2">Build ToolHub Together 🚀</h2>
+          <p class="lead opacity-90 m-0">
+            ToolHub is 100% open-source and developer-driven. Submit new tools, fix bugs, or improve UI components easily on GitHub.
+          </p>
+        </div>
+        <div class="col-lg-4 text-lg-end">
+          <a href="https://github.com" target="_blank" rel="noopener" class="btn btn-light text-primary btn-lg rounded-pill font-weight-bold px-4 shadow">
+            <i class="fa-brands fa-github me-2"></i>Contribute on GitHub
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

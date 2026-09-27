@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}{% if selected_category %}{{ selected_category.name }} - ToolHub{% else %}All Tools - ToolHub Directory{% endif %}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <!-- Page Header -->
+  <div class="mb-4 text-center text-md-start">
+    <h1 class="fw-bold mb-2">
+      {% if selected_category %}
+        <i class="{{ selected_category.icon }} text-primary me-2"></i>{{ selected_category.name }}
+      {% else %}
+        <i class="fa-solid fa-toolbox text-primary me-2"></i>All Online Tools
+      {% endif %}
+    </h1>
+    <p class="text-secondary lead fs-6">
+      {% if selected_category %}
+        {{ selected_category.description }}
+      {% else %}
+        Explore our complete library of {{ total_tools_count }} free, fast, open-source online tools.
+      {% endif %}
+    </p>
+  </div>
+
+  <!-- Category Filter Pills -->
+  <div class="d-flex flex-wrap gap-2 mb-4 pb-2 border-bottom">
+    <a href="{{ url_for('main.all_tools') }}" class="category-pill {% if not selected_category %}active{% endif %}">
+      <i class="fa-solid fa-border-all"></i> All Tools
+    </a>
+    {% for cat in categories %}
+      <a href="{{ url_for('main.category_detail', category_id=cat.id) }}" class="category-pill {% if selected_category and selected_category.id == cat.id %}active{% endif %}">
+        <i class="{{ cat.icon }}"></i> {{ cat.name }}
+      </a>
+    {% endfor %}
+  </div>
+
+  <!-- Tools Grid -->
+  <div class="row g-4">
+    {% if tools %}
+      {% for tool in tools %}
+        <div class="col-md-6 col-lg-4">
+          <div class="tool-card">
+            <div class="d-flex justify-content-between align-items-start">
+              <div class="tool-card-icon">
+                <i class="{{ tool.icon }}"></i>
+              </div>
+              <button class="btn btn-link p-0 text-muted btn-fav-toggle fs-5" data-tool-id="{{ tool.id }}" title="Bookmark tool">
+                <i class="fa-regular fa-star"></i>
+              </button>
+            </div>
+            <a href="{{ url_for('tools.tool_detail', tool_id=tool.id) }}" class="text-decoration-none">
+              <div class="tool-card-title">{{ tool.name }}</div>
+            </a>
+            <div class="tool-card-desc">{{ tool.description }}</div>
+            <div class="tool-card-footer">
+              {% if tool.client_side %}
+                <span class="badge-client-side"><i class="fa-solid fa-lock"></i> Client-Side</span>
+              {% else %}
+                <span class="badge-server-side"><i class="fa-solid fa-cloud"></i> Extensible AI</span>
+              {% endif %}
+              <a href="{{ url_for('tools.tool_detail', tool_id=tool.id) }}" class="btn btn-sm btn-outline-primary rounded-pill px-3">Open Tool</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="col-12 text-center py-5">
+        <div class="text-muted fs-4 mb-2"><i class="fa-solid fa-folder-open"></i></div>
+        <p class="text-secondary">No tools found in this category.</p>
+        <a href="{{ url_for('main.all_tools') }}" class="btn btn-primary rounded-pill">View All Tools</a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

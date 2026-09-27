@@ -1,0 +1,578 @@
+{% if tool.id == 'json-formatter' %}
+<!-- JSON Formatter & Minifier Widget -->
+<div>
+  <div class="row g-3 mb-3">
+    <div class="col-md-6">
+      <div class="tool-label">Input JSON</div>
+      <textarea id="json-input" class="tool-textarea" placeholder='Paste raw JSON string here... e.g. {"name": "ToolHub", "version": 1.0}'></textarea>
+    </div>
+    <div class="col-md-6">
+      <div class="tool-label">Output Result</div>
+      <textarea id="json-output" class="tool-textarea" readonly placeholder="Formatted or minified output will appear here..."></textarea>
+    </div>
+  </div>
+
+  <div id="json-error-alert" class="alert alert-danger d-none rounded-md" role="alert"></div>
+
+  <div class="tool-action-bar">
+    <button class="btn-action btn-primary-custom" onclick="runJSONFormat()"><i class="fa-solid fa-code"></i> Format JSON</button>
+    <button class="btn-action btn-secondary-custom" onclick="runJSONMinify()"><i class="fa-solid fa-compress"></i> Minify JSON</button>
+    <button class="btn-action btn-secondary-custom" onclick="runJSONValidate()"><i class="fa-solid fa-check"></i> Validate</button>
+    <div class="ms-auto d-flex gap-2">
+      <button class="btn-action btn-secondary-custom" onclick="copyToClipboard(document.getElementById('json-output').value)"><i class="fa-regular fa-copy"></i> Copy</button>
+      <button class="btn-action btn-secondary-custom" onclick="downloadFile('formatted.json', document.getElementById('json-output').value, 'application/json')"><i class="fa-solid fa-download"></i> Download</button>
+      <button class="btn-action btn-secondary-custom text-danger" onclick="document.getElementById('json-input').value=''; document.getElementById('json-output').value=''; document.getElementById('json-error-alert').classList.add('d-none');"><i class="fa-solid fa-trash"></i> Clear</button>
+    </div>
+  </div>
+</div>
+<script>
+  function runJSONFormat() {
+    const input = document.getElementById('json-input').value;
+    const res = DevTools.formatJSON(input);
+    const alert = document.getElementById('json-error-alert');
+    if (res.success) {
+      document.getElementById('json-output').value = res.result;
+      alert.classList.add('d-none');
+    } else {
+      alert.innerText = 'JSON Syntax Error: ' + res.error;
+      alert.classList.remove('d-none');
+    }
+  }
+  function runJSONMinify() {
+    const input = document.getElementById('json-input').value;
+    const res = DevTools.minifyJSON(input);
+    const alert = document.getElementById('json-error-alert');
+    if (res.success) {
+      document.getElementById('json-output').value = res.result;
+      alert.classList.add('d-none');
+    } else {
+      alert.innerText = 'JSON Syntax Error: ' + res.error;
+      alert.classList.remove('d-none');
+    }
+  }
+  function runJSONValidate() {
+    const input = document.getElementById('json-input').value;
+    const res = DevTools.validateJSON(input);
+    const alert = document.getElementById('json-error-alert');
+    if (res.valid) {
+      alert.className = 'alert alert-success rounded-md';
+      alert.innerText = '✓ ' + res.message;
+      alert.classList.remove('d-none');
+    } else {
+      alert.className = 'alert alert-danger rounded-md';
+      alert.innerText = 'Invalid JSON: ' + res.message;
+      alert.classList.remove('d-none');
+    }
+  }
+</script>
+
+{% elif tool.id == 'base64-converter' or tool.id == 'url-encoder' %}
+<!-- Base64 & URL Encoder/Decoder Widget -->
+<div>
+  <div class="row g-3 mb-3">
+    <div class="col-md-6">
+      <div class="tool-label">Input String</div>
+      <textarea id="encoder-input" class="tool-textarea" placeholder="Enter text to convert..."></textarea>
+    </div>
+    <div class="col-md-6">
+      <div class="tool-label">Output Result</div>
+      <textarea id="encoder-output" class="tool-textarea" readonly placeholder="Output string will appear here..."></textarea>
+    </div>
+  </div>
+
+  <div class="tool-action-bar">
+    {% if tool.id == 'base64-converter' %}
+      <button class="btn-action btn-primary-custom" onclick="const res = DevTools.base64Encode(document.getElementById('encoder-input').value); document.getElementById('encoder-output').value = res.result || res.error;"><i class="fa-solid fa-lock"></i> Encode Base64</button>
+      <button class="btn-action btn-secondary-custom" onclick="const res = DevTools.base64Decode(document.getElementById('encoder-input').value); document.getElementById('encoder-output').value = res.result || res.error;"><i class="fa-solid fa-unlock"></i> Decode Base64</button>
+    {% else %}
+      <button class="btn-action btn-primary-custom" onclick="document.getElementById('encoder-output').value = DevTools.urlEncode(document.getElementById('encoder-input').value);"><i class="fa-solid fa-link"></i> Encode URL</button>
+      <button class="btn-action btn-secondary-custom" onclick="document.getElementById('encoder-output').value = DevTools.urlDecode(document.getElementById('encoder-input').value);"><i class="fa-solid fa-link-slash"></i> Decode URL</button>
+    {% endif %}
+    <div class="ms-auto d-flex gap-2">
+      <button class="btn-action btn-secondary-custom" onclick="copyToClipboard(document.getElementById('encoder-output').value)"><i class="fa-regular fa-copy"></i> Copy</button>
+      <button class="btn-action btn-secondary-custom text-danger" onclick="document.getElementById('encoder-input').value=''; document.getElementById('encoder-output').value='';"><i class="fa-solid fa-trash"></i> Clear</button>
+    </div>
+  </div>
+</div>
+
+{% elif tool.id == 'jwt-decoder' %}
+<!-- JWT Decoder Widget -->
+<div>
+  <div class="mb-3">
+    <div class="tool-label">Encoded JWT Token</div>
+    <textarea id="jwt-input" class="tool-textarea" rows="3" placeholder="Paste your JWT Token here (e.g. eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...)"></textarea>
+  </div>
+
+  <button class="btn-action btn-primary-custom mb-4" onclick="runJWTDecode()"><i class="fa-solid fa-key"></i> Decode JWT Claims</button>
+
+  <div class="row g-3">
+    <div class="col-md-6">
+      <div class="tool-label">Token Header</div>
+      <textarea id="jwt-header" class="tool-textarea" readonly placeholder="Header JSON..."></textarea>
+    </div>
+    <div class="col-md-6">
+      <div class="tool-label">Token Payload (Claims)</div>
+      <textarea id="jwt-payload" class="tool-textarea" readonly placeholder="Payload Claims JSON..."></textarea>
+    </div>
+  </div>
+</div>
+<script>
+  function runJWTDecode() {
+    const res = DevTools.decodeJWT(document.getElementById('jwt-input').value);
+    if (res.success) {
+      document.getElementById('jwt-header').value = res.header;
+      document.getElementById('jwt-payload').value = res.payload;
+    } else {
+      showToast(res.error, 'error');
+    }
+  }
+</script>
+
+{% elif tool.id == 'uuid-generator' %}
+<!-- UUID Generator Widget -->
+<div>
+  <div class="row g-3 align-items-center mb-3">
+    <div class="col-md-3">
+      <label class="form-label fw-bold">Quantity (1 - 100)</label>
+      <input type="number" id="uuid-count" class="form-control" value="5" min="1" max="100">
+    </div>
+    <div class="col-md-3">
+      <div class="form-check mt-4">
+        <input class="form-check-input" type="checkbox" id="uuid-uppercase">
+        <label class="form-check-label fw-semibold" for="uuid-uppercase">Uppercase Letters</label>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="form-check mt-4">
+        <input class="form-check-input" type="checkbox" id="uuid-hyphens" checked>
+        <label class="form-check-label fw-semibold" for="uuid-hyphens">Include Hyphens</label>
+      </div>
+    </div>
+    <div class="col-md-3 mt-4 text-md-end">
+      <button class="btn-action btn-primary-custom w-100" onclick="generateUUIDs()"><i class="fa-solid fa-bolt"></i> Generate UUIDs</button>
+    </div>
+  </div>
+
+  <div class="tool-label">Generated UUID v4 List</div>
+  <textarea id="uuid-output" class="tool-textarea" readonly rows="8"></textarea>
+
+  <div class="tool-action-bar">
+    <button class="btn-action btn-secondary-custom" onclick="copyToClipboard(document.getElementById('uuid-output').value)"><i class="fa-regular fa-copy"></i> Copy List</button>
+    <button class="btn-action btn-secondary-custom" onclick="downloadFile('uuids.txt', document.getElementById('uuid-output').value)"><i class="fa-solid fa-download"></i> Download .txt</button>
+  </div>
+</div>
+<script>
+  function generateUUIDs() {
+    const count = parseInt(document.getElementById('uuid-count').value) || 5;
+    const upper = document.getElementById('uuid-uppercase').checked;
+    const hyphens = document.getElementById('uuid-hyphens').checked;
+    document.getElementById('uuid-output').value = DevTools.generateUUID(count, upper, hyphens);
+  }
+  document.addEventListener('DOMContentLoaded', generateUUIDs);
+</script>
+
+{% elif tool.id == 'word-counter' %}
+<!-- Word Counter Widget -->
+<div>
+  <div class="tool-label">Input Text</div>
+  <textarea id="word-input" class="tool-textarea mb-4" rows="8" placeholder="Type or paste your text here to get instant word count and reading time metrics..." oninput="updateWordStats()"></textarea>
+
+  <div class="row g-3">
+    <div class="col-6 col-md-4 col-lg-2">
+      <div class="p-3 bg-surface-subtle border radius-md text-center">
+        <div class="text-muted small">Words</div>
+        <div id="stat-words" class="fs-3 fw-bold text-primary">0</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-4 col-lg-2">
+      <div class="p-3 bg-surface-subtle border radius-md text-center">
+        <div class="text-muted small">Characters</div>
+        <div id="stat-chars" class="fs-3 fw-bold text-primary">0</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-4 col-lg-2">
+      <div class="p-3 bg-surface-subtle border radius-md text-center">
+        <div class="text-muted small">No Spaces</div>
+        <div id="stat-nospaces" class="fs-3 fw-bold text-primary">0</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-4 col-lg-2">
+      <div class="p-3 bg-surface-subtle border radius-md text-center">
+        <div class="text-muted small">Sentences</div>
+        <div id="stat-sentences" class="fs-3 fw-bold text-primary">0</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-4 col-lg-2">
+      <div class="p-3 bg-surface-subtle border radius-md text-center">
+        <div class="text-muted small">Paragraphs</div>
+        <div id="stat-paragraphs" class="fs-3 fw-bold text-primary">0</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-4 col-lg-2">
+      <div class="p-3 bg-surface-subtle border radius-md text-center">
+        <div class="text-muted small">Reading Time</div>
+        <div id="stat-reading" class="fs-4 fw-bold text-success mt-1">0 min</div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  function updateWordStats() {
+    const text = document.getElementById('word-input').value;
+    const res = TextTools.analyzeText(text);
+    document.getElementById('stat-words').innerText = res.words;
+    document.getElementById('stat-chars').innerText = res.chars;
+    document.getElementById('stat-nospaces').innerText = res.charsNoSpaces;
+    document.getElementById('stat-sentences').innerText = res.sentences;
+    document.getElementById('stat-paragraphs').innerText = res.paragraphs;
+    document.getElementById('stat-reading').innerText = res.readingTime;
+  }
+</script>
+
+{% elif tool.id == 'case-converter' %}
+<!-- Case Converter Widget -->
+<div>
+  <div class="tool-label">Input Text</div>
+  <textarea id="case-input" class="tool-textarea mb-3" rows="6" placeholder="Enter text to convert case..."></textarea>
+
+  <div class="d-flex flex-wrap gap-2 mb-3">
+    <button class="btn btn-outline-primary btn-sm rounded-pill" onclick="applyCase('uppercase')">UPPERCASE</button>
+    <button class="btn btn-outline-primary btn-sm rounded-pill" onclick="applyCase('lowercase')">lowercase</button>
+    <button class="btn btn-outline-primary btn-sm rounded-pill" onclick="applyCase('titlecase')">Title Case</button>
+    <button class="btn btn-outline-primary btn-sm rounded-pill" onclick="applyCase('sentencecase')">Sentence case</button>
+    <button class="btn btn-outline-primary btn-sm rounded-pill" onclick="applyCase('camelcase')">camelCase</button>
+    <button class="btn btn-outline-primary btn-sm rounded-pill" onclick="applyCase('pascalcase')">PascalCase</button>
+    <button class="btn btn-outline-primary btn-sm rounded-pill" onclick="applyCase('snake_case')">snake_case</button>
+    <button class="btn btn-outline-primary btn-sm rounded-pill" onclick="applyCase('kebab-case')">kebab-case</button>
+  </div>
+
+  <div class="tool-label">Converted Output</div>
+  <textarea id="case-output" class="tool-textarea" readonly rows="6"></textarea>
+
+  <div class="tool-action-bar">
+    <button class="btn-action btn-secondary-custom" onclick="copyToClipboard(document.getElementById('case-output').value)"><i class="fa-regular fa-copy"></i> Copy Output</button>
+  </div>
+</div>
+<script>
+  function applyCase(type) {
+    const input = document.getElementById('case-input').value;
+    document.getElementById('case-output').value = TextTools.convertCase(input, type);
+  }
+</script>
+
+{% elif tool.id == 'scientific-calculator' %}
+<!-- Scientific Calculator Widget -->
+<div style="max-width: 450px; margin: 0 auto;">
+  <div class="calc-display">
+    <div id="calc-expr" class="calc-expression"></div>
+    <div id="calc-val" class="calc-result">0</div>
+  </div>
+
+  <div class="calc-grid">
+    <button class="calc-btn calc-btn-op" onclick="calcInput('C')">C</button>
+    <button class="calc-btn calc-btn-op" onclick="calcInput('(')">(</button>
+    <button class="calc-btn calc-btn-op" onclick="calcInput(')')">)</button>
+    <button class="calc-btn calc-btn-op" onclick="calcInput('÷')">÷</button>
+
+    <button class="calc-btn calc-btn-op" onclick="calcInput('sin(')">sin</button>
+    <button class="calc-btn calc-btn-op" onclick="calcInput('cos(')">cos</button>
+    <button class="calc-btn calc-btn-op" onclick="calcInput('tan(')">tan</button>
+    <button class="calc-btn calc-btn-op" onclick="calcInput('×')">×</button>
+
+    <button class="calc-btn" onclick="calcInput('7')">7</button>
+    <button class="calc-btn" onclick="calcInput('8')">8</button>
+    <button class="calc-btn" onclick="calcInput('9')">9</button>
+    <button class="calc-btn calc-btn-op" onclick="calcInput('-')">-</button>
+
+    <button class="calc-btn" onclick="calcInput('4')">4</button>
+    <button class="calc-btn" onclick="calcInput('5')">5</button>
+    <button class="calc-btn" onclick="calcInput('6')">6</button>
+    <button class="calc-btn calc-btn-op" onclick="calcInput('+')">+</button>
+
+    <button class="calc-btn" onclick="calcInput('1')">1</button>
+    <button class="calc-btn" onclick="calcInput('2')">2</button>
+    <button class="calc-btn" onclick="calcInput('3')">3</button>
+    <button class="calc-btn calc-btn-op" onclick="calcInput('^')">^</button>
+
+    <button class="calc-btn" onclick="calcInput('0')">0</button>
+    <button class="calc-btn" onclick="calcInput('.')">.</button>
+    <button class="calc-btn calc-btn-op" onclick="calcInput('sqrt(')">√</button>
+    <button class="calc-btn calc-btn-equals" onclick="calcEquals()">=</button>
+  </div>
+</div>
+<script>
+  let calcBuffer = '';
+  function calcInput(char) {
+    if (char === 'C') {
+      calcBuffer = '';
+      document.getElementById('calc-expr').innerText = '';
+      document.getElementById('calc-val').innerText = '0';
+    } else {
+      calcBuffer += char;
+      document.getElementById('calc-val').innerText = calcBuffer;
+    }
+  }
+  function calcEquals() {
+    document.getElementById('calc-expr').innerText = calcBuffer + ' =';
+    const res = CalcTools.evaluateExpression(calcBuffer);
+    document.getElementById('calc-val').innerText = res;
+    calcBuffer = res === 'Error' ? '' : res;
+  }
+</script>
+
+{% elif tool.id == 'unit-converter' %}
+<!-- Universal Unit Converter Widget -->
+<div>
+  <div class="row g-3 mb-4">
+    <div class="col-md-4">
+      <label class="form-label fw-bold">Unit Category</label>
+      <select id="unit-cat" class="form-select" onchange="populateUnits()">
+        <option value="length">Length</option>
+        <option value="weight">Weight / Mass</option>
+        <option value="temperature">Temperature</option>
+        <option value="area">Area</option>
+        <option value="speed">Speed</option>
+        <option value="data">Data Storage</option>
+        <option value="time">Time</option>
+      </select>
+    </div>
+    <div class="col-md-4">
+      <label class="form-label fw-bold">From Unit</label>
+      <select id="unit-from" class="form-select" onchange="runUnitConvert()"></select>
+    </div>
+    <div class="col-md-4">
+      <label class="form-label fw-bold">To Unit</label>
+      <select id="unit-to" class="form-select" onchange="runUnitConvert()"></select>
+    </div>
+  </div>
+
+  <div class="row g-3 align-items-center">
+    <div class="col-md-6">
+      <label class="form-label fw-bold">Input Value</label>
+      <input type="number" id="unit-val-in" class="form-control form-control-lg" value="1" oninput="runUnitConvert()">
+    </div>
+    <div class="col-md-6">
+      <label class="form-label fw-bold">Converted Output</label>
+      <div id="unit-val-out" class="p-3 bg-surface-subtle border radius-md fs-3 fw-bold text-primary">0</div>
+    </div>
+  </div>
+</div>
+<script>
+  const UNITS = {
+    length: ['meter', 'kilometer', 'centimeter', 'millimeter', 'mile', 'yard', 'foot', 'inch'],
+    weight: ['kilogram', 'gram', 'milligram', 'pound', 'ounce', 'ton'],
+    temperature: ['celsius', 'fahrenheit', 'kelvin'],
+    area: ['sq_meter', 'sq_kilometer', 'sq_mile', 'sq_foot', 'acre', 'hectare'],
+    speed: ['kph', 'mph', 'mps', 'knot'],
+    data: ['megabyte', 'gigabyte', 'terabyte', 'kilobyte', 'byte'],
+    time: ['hour', 'minute', 'second', 'day', 'week', 'year']
+  };
+  function populateUnits() {
+    const cat = document.getElementById('unit-cat').value;
+    const fromSel = document.getElementById('unit-from');
+    const toSel = document.getElementById('unit-to');
+    fromSel.innerHTML = UNITS[cat].map(u => `<option value="${u}">${u}</option>`).join('');
+    toSel.innerHTML = UNITS[cat].map(u => `<option value="${u}">${u}</option>`).join('');
+    toSel.selectedIndex = 1;
+    runUnitConvert();
+  }
+  function runUnitConvert() {
+    const cat = document.getElementById('unit-cat').value;
+    const val = document.getElementById('unit-val-in').value;
+    const from = document.getElementById('unit-from').value;
+    const to = document.getElementById('unit-to').value;
+    document.getElementById('unit-val-out').innerText = CalcTools.convertUnit(cat, val, from, to);
+  }
+  document.addEventListener('DOMContentLoaded', populateUnits);
+</script>
+
+{% elif tool.id == 'password-generator' %}
+<!-- Password Generator Widget -->
+<div>
+  <div class="tool-label">Generated Secure Password</div>
+  <div class="input-group input-group-lg mb-4">
+    <input type="text" id="pwd-out" class="form-control font-monospace fw-bold text-primary" readonly>
+    <button class="btn btn-primary" onclick="copyToClipboard(document.getElementById('pwd-out').value)"><i class="fa-regular fa-copy"></i> Copy</button>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label fw-bold d-flex justify-content-between">
+      <span>Password Length: <span id="pwd-len-val" class="text-primary">16</span> chars</span>
+    </label>
+    <input type="range" id="pwd-len" class="form-range" min="6" max="64" value="16" oninput="document.getElementById('pwd-len-val').innerText = this.value; generatePass();">
+  </div>
+
+  <div class="row g-3 mb-4">
+    <div class="col-md-3">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="pwd-upper" checked onchange="generatePass()">
+        <label class="form-check-label" for="pwd-upper">Uppercase (A-Z)</label>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="pwd-lower" checked onchange="generatePass()">
+        <label class="form-check-label" for="pwd-lower">Lowercase (a-z)</label>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="pwd-nums" checked onchange="generatePass()">
+        <label class="form-check-label" for="pwd-nums">Numbers (0-9)</label>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="pwd-syms" checked onchange="generatePass()">
+        <label class="form-check-label" for="pwd-syms">Symbols (!@#$)</label>
+      </div>
+    </div>
+  </div>
+
+  <button class="btn-action btn-primary-custom" onclick="generatePass()"><i class="fa-solid fa-arrows-rotate"></i> Regenerate Password</button>
+</div>
+<script>
+  function generatePass() {
+    const len = parseInt(document.getElementById('pwd-len').value);
+    const u = document.getElementById('pwd-upper').checked;
+    const l = document.getElementById('pwd-lower').checked;
+    const n = document.getElementById('pwd-nums').checked;
+    const s = document.getElementById('pwd-syms').checked;
+    document.getElementById('pwd-out').value = SecTools.generatePassword(len, u, l, n, s);
+  }
+  document.addEventListener('DOMContentLoaded', generatePass);
+</script>
+
+{% elif tool.id == 'image-compressor' %}
+<!-- Image Compressor Widget -->
+<div>
+  <div class="image-preview-box mb-4" onclick="document.getElementById('img-comp-file').click()">
+    <i class="fa-solid fa-cloud-arrow-up fs-1 text-primary mb-2"></i>
+    <div class="fw-bold fs-5">Upload Image to Compress</div>
+    <div class="text-muted small">Supports JPG, PNG, WebP files up to 16MB. Processed 100% locally.</div>
+    <input type="file" id="img-comp-file" class="d-none" accept="image/*" onchange="previewCompressImage(this.files[0])">
+  </div>
+
+  <div id="img-comp-workspace" class="d-none">
+    <div class="row g-3 mb-4">
+      <div class="col-md-6">
+        <label class="form-label fw-bold">Compression Quality: <span id="comp-qual-val" class="text-primary">80%</span></label>
+        <input type="range" id="comp-qual" class="form-range" min="10" max="95" value="80" oninput="document.getElementById('comp-qual-val').innerText = this.value + '%';">
+      </div>
+      <div class="col-md-6 d-flex align-items-end">
+        <button class="btn-action btn-primary-custom w-100" onclick="recompressImage()"><i class="fa-solid fa-bolt"></i> Compress Image</button>
+      </div>
+    </div>
+
+    <div class="row g-3">
+      <div class="col-md-6 text-center">
+        <div class="tool-label">Original Image (<span id="orig-size-lbl"></span>)</div>
+        <img id="orig-preview-img" class="image-preview-img mb-2">
+      </div>
+      <div class="col-md-6 text-center">
+        <div class="tool-label">Compressed Output (<span id="comp-size-lbl" class="text-success fw-bold"></span>)</div>
+        <img id="comp-preview-img" class="image-preview-img mb-2">
+        <div>
+          <a id="img-comp-dl" class="btn btn-success rounded-pill mt-2 px-4" download="compressed.jpg"><i class="fa-solid fa-download me-1"></i> Download Compressed Image</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  let currentFile = null;
+  function previewCompressImage(file) {
+    if (!file) return;
+    currentFile = file;
+    document.getElementById('img-comp-workspace').classList.remove('d-none');
+    document.getElementById('orig-preview-img').src = URL.createObjectURL(file);
+    document.getElementById('orig-size-lbl').innerText = (file.size / 1024).toFixed(1) + ' KB';
+    recompressImage();
+  }
+  function recompressImage() {
+    if (!currentFile) return;
+    const qual = parseInt(document.getElementById('comp-qual').value) / 100;
+    ImageTools.compressImage(currentFile, qual, 'image/jpeg', res => {
+      document.getElementById('comp-preview-img').src = res.compressedUrl;
+      document.getElementById('comp-size-lbl').innerText = (res.compressedSize / 1024).toFixed(1) + ' KB';
+      const dl = document.getElementById('img-comp-dl');
+      dl.href = res.compressedUrl;
+    });
+  }
+</script>
+
+{% elif tool.id.startswith('ai-') %}
+<!-- AI Tools Generic Widget -->
+<div>
+  <div class="tool-label">Input Content for AI</div>
+  <textarea id="ai-input-text" class="tool-textarea mb-3" rows="6" placeholder="Enter text here for AI processing..."></textarea>
+
+  <div class="tool-action-bar">
+    {% if tool.id == 'ai-summarizer' %}
+      <button id="ai-exec-btn" class="btn-action btn-primary-custom" onclick="AITools.summarize(document.getElementById('ai-input-text').value, document.getElementById('ai-output-text'), this)"><i class="fa-solid fa-wand-magic-sparkles"></i> Summarize Text</button>
+    {% elif tool.id == 'ai-rewriter' %}
+      <button id="ai-exec-btn" class="btn-action btn-primary-custom" onclick="AITools.rewrite(document.getElementById('ai-input-text').value, 'clear', document.getElementById('ai-output-text'), this)"><i class="fa-solid fa-pen-sparkles"></i> Rewrite Text</button>
+    {% elif tool.id == 'ai-explainer' %}
+      <button id="ai-exec-btn" class="btn-action btn-primary-custom" onclick="AITools.explain(document.getElementById('ai-input-text').value, 'simple', document.getElementById('ai-output-container'), this)"><i class="fa-solid fa-brain"></i> Explain Concept</button>
+    {% elif tool.id == 'ai-question-generator' %}
+      <button id="ai-exec-btn" class="btn-action btn-primary-custom" onclick="AITools.generateQuestions(document.getElementById('ai-input-text').value, 5, document.getElementById('ai-output-container'), this)"><i class="fa-solid fa-circle-question"></i> Generate Quiz</button>
+    {% endif %}
+  </div>
+
+  <div class="tool-label mt-4">AI Output</div>
+  {% if tool.id == 'ai-explainer' or tool.id == 'ai-question-generator' %}
+    <div id="ai-output-container" class="p-3 border rounded bg-surface-subtle" style="min-height: 150px;">AI response will appear here...</div>
+  {% else %}
+    <textarea id="ai-output-text" class="tool-textarea" readonly rows="6" placeholder="AI result will appear here..."></textarea>
+    <div class="mt-2 text-end">
+      <button class="btn-action btn-secondary-custom" onclick="copyToClipboard(document.getElementById('ai-output-text').value)"><i class="fa-regular fa-copy"></i> Copy Output</button>
+    </div>
+  {% endif %}
+</div>
+
+{% else %}
+<!-- Default Generic Text Workspace Fallback for Text Diff, Formatters, etc. -->
+<div>
+  <div class="row g-3 mb-3">
+    <div class="col-md-6">
+      <div class="tool-label">Input Text</div>
+      <textarea id="gen-input" class="tool-textarea" rows="8" placeholder="Paste or type content here..."></textarea>
+    </div>
+    <div class="col-md-6">
+      <div class="tool-label">Output</div>
+      <textarea id="gen-output" class="tool-textarea" readonly rows="8" placeholder="Result will appear here..."></textarea>
+    </div>
+  </div>
+
+  <div class="tool-action-bar">
+    <button class="btn-action btn-primary-custom" onclick="runGenericTool()"><i class="fa-solid fa-play"></i> Process Data</button>
+    <div class="ms-auto d-flex gap-2">
+      <button class="btn-action btn-secondary-custom" onclick="copyToClipboard(document.getElementById('gen-output').value)"><i class="fa-regular fa-copy"></i> Copy</button>
+      <button class="btn-action btn-secondary-custom text-danger" onclick="document.getElementById('gen-input').value=''; document.getElementById('gen-output').value='';"><i class="fa-solid fa-trash"></i> Clear</button>
+    </div>
+  </div>
+</div>
+<script>
+  function runGenericTool() {
+    const input = document.getElementById('gen-input').value;
+    const toolId = '{{ tool.id }}';
+    if (toolId === 'remove-duplicate-lines') {
+      document.getElementById('gen-output').value = TextTools.removeDuplicateLines(input);
+    } else if (toolId === 'sort-lines') {
+      document.getElementById('gen-output').value = TextTools.sortLines(input);
+    } else if (toolId === 'lorem-generator') {
+      document.getElementById('gen-output').value = TextTools.generateLorem('paragraphs', 3);
+    } else if (toolId === 'html-formatter') {
+      document.getElementById('gen-output').value = DevTools.formatHTML(input);
+    } else if (toolId === 'css-formatter') {
+      document.getElementById('gen-output').value = DevTools.formatCSS(input);
+    } else if (toolId === 'sql-formatter') {
+      document.getElementById('gen-output').value = DevTools.formatSQL(input);
+    } else if (toolId === 'hash-generator') {
+      SecTools.generateHash(input, 'SHA-256').then(h => document.getElementById('gen-output').value = h);
+    } else {
+      document.getElementById('gen-output').value = input;
+    }
+  }
+</script>
+{% endif %}

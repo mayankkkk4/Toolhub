@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Something Went Wrong (500) - ToolHub{% endblock %}
+
+{% block content %}
+<div class="container py-5 text-center my-5">
+  <div class="display-1 fw-bold text-danger mb-3">500</div>
+  <h2 class="fw-bold mb-2">Something went wrong</h2>
+  <p class="text-secondary max-width-600 mx-auto mb-3">
+    An unexpected error occurred while processing your request. Please try again.
+  </p>
+  <div class="badge bg-secondary-subtle text-muted border px-3 py-2 font-monospace mb-4">
+    Error Reference: OT-ERR-{{ range(10000, 99999) | random }}
+  </div>
+  <div>
+    <a href="{{ url_for('main.index') }}" class="btn btn-primary rounded-pill px-4">Return Home</a>
+  </div>
+</div>
+{% endblock %}
